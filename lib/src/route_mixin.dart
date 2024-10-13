@@ -28,13 +28,13 @@ mixin RouteMixin {
     return RouteRegisterImpl.containPathInStack(path);
   }
 
-  bool containName(String? name) {
-    return RouteRegisterImpl.containName(name);
-  }
-
-  BaseRoute? getRouteFromName(String? name) {
-    return RouteRegisterImpl.getRouteFromName(name);
-  }
+  // bool containName(String? name) {
+  //   return RouteRegisterImpl.containName(name);
+  // }
+  //
+  // BaseRoute? getRouteFromName(String? name) {
+  //   return RouteRegisterImpl.getRouteFromName(name);
+  // }
 
   bool containPath(String? path) {
     return RouteRegisterImpl.containPath(path);

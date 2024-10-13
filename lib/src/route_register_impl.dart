@@ -26,7 +26,7 @@ class RouteRegisterImpl extends RouteRegister {
 
   final Map<String, BaseRoute> _pathRoutes = {};
 
-  final Map<String, BaseRoute> _nameRoutes = {};
+  // final Map<String, BaseRoute> _nameRoutes = {};
 
   static List<GoRoute> get routeStack =>
       routeConfig.routerDelegate.currentConfiguration.routes
@@ -50,10 +50,10 @@ class RouteRegisterImpl extends RouteRegister {
 
   @override
   void registerRoute(BaseRoute route) {
-    assert(!_nameRoutes.containsKey(route.name), "name has been registered");
+    // assert(!_nameRoutes.containsKey(route.name), "name has been registered");
     assert(!_pathRoutes.containsKey(route.path), "name has been registered");
     _pathRoutes[route.path] = route;
-    _nameRoutes[route.name] = route;
+    // _nameRoutes[route.name] = route;
   }
 
   static bool containPathInStack(String? path) {
@@ -63,19 +63,19 @@ class RouteRegisterImpl extends RouteRegister {
     return pathStack.contains(path);
   }
 
-  static bool containName(String? name) {
-    if (name == null || name.isEmpty) {
-      return false;
-    }
-    return _instance._nameRoutes.containsKey(name);
-  }
-
-  static BaseRoute? getRouteFromName(String? name) {
-    if (!containName(name)) {
-      return null;
-    }
-    return _instance._nameRoutes[name];
-  }
+  // static bool containName(String? name) {
+  //   if (name == null || name.isEmpty) {
+  //     return false;
+  //   }
+  //   return _instance._nameRoutes.containsKey(name);
+  // }
+  //
+  // static BaseRoute? getRouteFromName(String? name) {
+  //   if (!containName(name)) {
+  //     return null;
+  //   }
+  //   return _instance._nameRoutes[name];
+  // }
 
   static bool containPath(String? path) {
     if (path == null || path.isEmpty) {

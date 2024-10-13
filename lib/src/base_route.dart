@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 abstract class BaseRoute extends GoRouteData {
   String get path;
 
-  String get name => runtimeType.toString();
+  // String get name => runtimeType.toString();
 
   List<GoRoute> get subRoutes => [];
 
@@ -16,7 +16,7 @@ abstract class BaseRoute extends GoRouteData {
   }) {
     return GoRoute(
       path: path,
-      name: name,
+      // name: name,
       builder: build,
       pageBuilder: buildPage,
       redirect: redirect,
