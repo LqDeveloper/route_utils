@@ -16,7 +16,7 @@ class RouteManager with RouteMixin {
     final initialLocation = await config.initialLocation;
     config.registerRoute(RouteRegisterImpl());
 
-    RouteRegisterImpl.initRoute(
+    RouteRegisterImpl.instance.initRoute(
       initialLocation: initialLocation,
       initialExtra: config.initialExtra,
       extraCodec: config.extraCodec,

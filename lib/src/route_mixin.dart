@@ -3,53 +3,47 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meta/meta.dart';
 
-import 'base_route.dart';
+import 'route_path_mixin.dart';
 import 'route_register_impl.dart';
 
 @internal
 mixin RouteMixin {
   GoRouter get router {
-    return RouteRegisterImpl.routeConfig;
+    return RouteRegisterImpl.instance.routeConfig;
   }
 
-  GlobalKey<NavigatorState> get navigatorKey => RouteRegisterImpl.navigatorKey;
+  GlobalKey<NavigatorState> get navigatorKey =>
+      RouteRegisterImpl.instance.navigatorKey;
 
-  BuildContext? get navContext => RouteRegisterImpl.navigatorKey.currentContext;
+  BuildContext? get navContext =>
+      RouteRegisterImpl.instance.navigatorKey.currentContext;
 
-  List<GoRoute> get routeStack => RouteRegisterImpl.routeStack;
+  List<GoRoute> get routeStack => RouteRegisterImpl.instance.routeStack;
 
-  List<String> get pathStack => RouteRegisterImpl.pathStack;
+  List<String> get pathStack => RouteRegisterImpl.instance.pathStack;
 
-  String get currentPath => RouteRegisterImpl.currentRoutePath;
+  String get currentPath => RouteRegisterImpl.instance.currentRoutePath;
 
-  List<String> get allRouterPath => RouteRegisterImpl.allRouterPath;
+  List<String> get allRouterPath => RouteRegisterImpl.instance.allRouterPath;
 
   bool containPathInStack(String? path) {
-    return RouteRegisterImpl.containPathInStack(path);
+    return RouteRegisterImpl.instance.containPathInStack(path);
   }
-
-  // bool containName(String? name) {
-  //   return RouteRegisterImpl.containName(name);
-  // }
-  //
-  // BaseRoute? getRouteFromName(String? name) {
-  //   return RouteRegisterImpl.getRouteFromName(name);
-  // }
 
   bool containPath(String? path) {
-    return RouteRegisterImpl.containPath(path);
+    return RouteRegisterImpl.instance.containPath(path);
   }
 
-  BaseRoute? getRouteFromPath(String? path) {
-    return RouteRegisterImpl.getRouteFromPath(path);
+  RoutePathMixin? getRouteFromPath(String? path) {
+    return RouteRegisterImpl.instance.getRouteFromPath(path);
   }
 
   void addListener(VoidCallback listener) {
-    RouteRegisterImpl.delegate.addListener(listener);
+    RouteRegisterImpl.instance.delegate.addListener(listener);
   }
 
   void removeListener(VoidCallback listener) {
-    RouteRegisterImpl.delegate.removeListener(listener);
+    RouteRegisterImpl.instance.delegate.removeListener(listener);
   }
 
   void go(

@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import 'route_result_mixin.dart';
+
 enum RouteChangeType {
   push,
   pop,
@@ -9,22 +11,43 @@ enum RouteChangeType {
   replace,
 }
 
+extension RouteExtension<T> on Route<T> {
+  bool get isPopup {
+    return this is PopupRoute;
+  }
+
+  RouteResultMixin<T>? get _resultMixin =>
+      (this is RouteResultMixin<T>) ? this as RouteResultMixin<T> : null;
+
+  Object? get arguments => settings.arguments;
+
+  T? get result => _resultMixin?.result;
+
+  String? get routeName => _resultMixin?.routeName;
+}
+
 class NavInfo {
-  final String? from;
-  final String? to;
+  final Route<dynamic>? from;
+  final Route<dynamic>? to;
   final RouteChangeType type;
-  final bool isPopup;
 
   NavInfo({
     required this.from,
     required this.to,
     required this.type,
-    required this.isPopup,
   });
+
+  Object? get arguments => to?.settings.arguments;
+
+  Object? get result => from?.result;
 
   @override
   String toString() {
-    return "NavInfo: from:$from to:$to type:$type isPopup:$isPopup";
+    if (type == RouteChangeType.push || type == RouteChangeType.replace) {
+      return "NavInfo: from:${from?.settings.name} to:${to?.settings.name} type:$type arguments:$arguments";
+    } else {
+      return "NavInfo: from:${from?.settings.name} to:${to?.settings.name} type:$type result:$result";
+    }
   }
 }
 
@@ -51,13 +74,12 @@ class RouteChangeObserver extends NavigatorObserver {
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
     super.didPop(route, previousRoute);
     final navInfo = NavInfo(
-      from: route.settings.name,
-      to: previousRoute?.settings.name,
+      from: route,
+      to: previousRoute,
       type: RouteChangeType.pop,
-      isPopup: previousRoute is PopupRoute,
     );
     _currentPath = previousRoute?.settings.name;
-    _isCurrentPopup = navInfo.isPopup;
+    _isCurrentPopup = navInfo.to?.isPopup ?? false;
     _controller.add(navInfo);
   }
 
@@ -65,26 +87,25 @@ class RouteChangeObserver extends NavigatorObserver {
   void didRemove(Route route, Route? previousRoute) {
     super.didRemove(route, previousRoute);
     final navInfo = NavInfo(
-      from: route.settings.name,
-      to: previousRoute?.settings.name,
+      from: route,
+      to: previousRoute,
       type: RouteChangeType.remove,
-      isPopup: previousRoute is PopupRoute,
     );
     _currentPath = previousRoute?.settings.name;
-    _isCurrentPopup = navInfo.isPopup;
+    _isCurrentPopup = navInfo.to?.isPopup ?? false;
     _controller.add(navInfo);
   }
 
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    super.didPush(route, previousRoute);
     final navInfo = NavInfo(
-      from: previousRoute?.settings.name,
-      to: route.settings.name,
+      from: previousRoute,
+      to: route,
       type: RouteChangeType.push,
-      isPopup: route is PopupRoute,
     );
     _currentPath = route.settings.name;
-    _isCurrentPopup = navInfo.isPopup;
+    _isCurrentPopup = navInfo.to?.isPopup ?? false;
     _controller.add(navInfo);
   }
 
@@ -92,13 +113,12 @@ class RouteChangeObserver extends NavigatorObserver {
   void didReplace({Route? newRoute, Route? oldRoute}) {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
     final navInfo = NavInfo(
-      from: oldRoute?.settings.name,
-      to: newRoute?.settings.name,
+      from: oldRoute,
+      to: newRoute,
       type: RouteChangeType.replace,
-      isPopup: newRoute is PopupRoute,
     );
     _currentPath = newRoute?.settings.name;
-    _isCurrentPopup = navInfo.isPopup;
+    _isCurrentPopup = navInfo.to?.isPopup ?? false;
     _controller.add(navInfo);
   }
 }

@@ -1,27 +1,38 @@
+import 'package:flutter/material.dart';
+
 import 'package:go_router/go_router.dart';
-import 'package:meta/meta.dart';
 
-abstract class BaseRoute extends GoRouteData {
+import 'material_result_page_route.dart';
+import 'route_path_mixin.dart';
+
+abstract class BaseRoute extends GoRouteData with RoutePathMixin {
+  @override
   String get path;
-
-  // String get name => runtimeType.toString();
 
   List<GoRoute> get subRoutes => [];
 
   Map<String, dynamic> get pageInfo => {};
 
-  @internal
+  @override
   GoRoute createRoute({
     List<GoRoute> routes = const [],
   }) {
     return GoRoute(
       path: path,
-      // name: name,
-      builder: build,
       pageBuilder: buildPage,
       redirect: redirect,
       onExit: onExit,
       routes: routes.isNotEmpty ? routes : subRoutes,
+    );
+  }
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return MaterialResultPage(
+      routeName: routeName,
+      name: state.path,
+      arguments: state.extra,
+      child: build(context, state),
     );
   }
 }
