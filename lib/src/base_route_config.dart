@@ -4,15 +4,21 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-import 'package:go_router/go_router.dart';
-
 import 'route_register.dart';
 
 abstract class BaseRouteConfig {
-  FutureOr<String?> routeRedirect(BuildContext context, GoRouterState state) =>
+  FutureOr<String?> routeRedirect(
+    BuildContext context,
+    String? path,
+    Map<String, dynamic>? arguments,
+  ) =>
       null;
 
-  void routeException(BuildContext context, GoRouterState state) {}
+  void routeException(
+    BuildContext context,
+    String? path,
+    Map<String, dynamic>? arguments,
+  ) {}
 
   Codec<Object?, Object?>? get extraCodec => null;
 

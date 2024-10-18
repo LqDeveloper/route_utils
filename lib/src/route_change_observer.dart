@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'route_result_mixin.dart';
+import 'mixin/route_result_mixin.dart';
 
 enum RouteChangeType {
   push,
@@ -23,7 +23,7 @@ extension RouteExtension<T> on Route<T> {
 
   T? get result => _resultMixin?.result;
 
-  String? get routeName => _resultMixin?.routeName;
+  String? get pageName => _resultMixin?.pageName;
 }
 
 class NavInfo {

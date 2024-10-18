@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'route_result_mixin.dart';
+import 'mixin/route_result_mixin.dart';
 
 class MaterialResultPage<T> extends MaterialPage<T> {
-  final String? routeName;
+  final String? pageName;
 
   const MaterialResultPage({
     required super.child,
-    this.routeName,
+    this.pageName,
     super.maintainState = true,
     super.fullscreenDialog = false,
     super.allowSnapshotting = true,
@@ -23,7 +23,7 @@ class MaterialResultPage<T> extends MaterialPage<T> {
   Route<T> createRoute(BuildContext context) {
     return MaterialResultPageRoute<T>(
       settings: this,
-      name: routeName,
+      name: pageName,
       fullscreenDialog: fullscreenDialog,
       allowSnapshotting: allowSnapshotting,
       builder: (BuildContext context) {
@@ -52,7 +52,7 @@ class MaterialResultPageRoute<T> extends MaterialPageRoute<T>
   bool get maintainState => maintain;
 
   @override
-  String? get routeName => name;
+  String? get pageName => name;
 
   @override
   Widget buildContent(BuildContext context) {

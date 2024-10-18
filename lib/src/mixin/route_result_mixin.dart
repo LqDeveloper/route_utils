@@ -5,7 +5,7 @@ mixin RouteResultMixin<T> on Route<T> {
 
   T? get result => _popResult;
 
-  String? get routeName => null;
+  String? get pageName => null;
 
   @override
   void onPopInvokedWithResult(bool didPop, T? result) {

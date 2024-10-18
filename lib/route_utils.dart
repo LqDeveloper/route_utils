@@ -1,8 +1,6 @@
 library route_utils;
 
-export 'package:go_router/go_router.dart';
-
-export 'src/route_path_mixin.dart';
+export 'src/mixin/route_path_mixin.dart';
 export 'src/base_route.dart';
 export 'src/base_route_config.dart';
 export 'src/nav_link.dart';

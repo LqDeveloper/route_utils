@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meta/meta.dart';
 
+import '../route_register_impl.dart';
 import 'route_path_mixin.dart';
-import 'route_register_impl.dart';
 
 @internal
 mixin RouteMixin {

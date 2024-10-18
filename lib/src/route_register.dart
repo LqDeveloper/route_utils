@@ -1,5 +1,5 @@
-import 'base_route.dart';
+import 'mixin/route_path_mixin.dart';
 
 abstract class RouteRegister {
-  void registerRoute(BaseRoute route);
+  void registerRoute(RoutePathMixin route);
 }

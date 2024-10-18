@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
 
 import 'base_route_config.dart';
-import 'route_mixin.dart';
+import 'mixin/route_mixin.dart';
 import 'route_register_impl.dart';
 
 class RouteManager with RouteMixin {
@@ -23,8 +23,28 @@ class RouteManager with RouteMixin {
       observers: config.observers,
       debugLogDiagnostics: config.debugLogDiagnostics,
       navigatorKey: config.navigatorKey,
-      redirect: config.routeRedirect,
-      onException: config.routeException,
+      redirect: (context, state) {
+        Map<String, dynamic>? arguments;
+        if (state.extra is Map<String, dynamic>) {
+          arguments = state.extra as Map<String, dynamic>?;
+        }
+        return config.routeRedirect(
+          context,
+          state.path,
+          arguments,
+        );
+      },
+      onException: (context, state) {
+        Map<String, dynamic>? arguments;
+        if (state.extra is Map<String, dynamic>) {
+          arguments = state.extra as Map<String, dynamic>?;
+        }
+        config.routeException(
+          context,
+          state.path,
+          arguments,
+        );
+      },
       refreshListenable: config.refreshListenable,
     );
   }
