@@ -1,11 +1,11 @@
 name: route_utils
-description: "A new Flutter project."
+description: "A routing management tool based on go_router, convenient for modular registration of routes"
 version: 0.0.1
-homepage:
+homepage: https://github.com/LqDeveloper/route_utils
 
 environment:
-  sdk: ">=3.3.3 <4.0.0"
-  flutter: ">=3.0.0 <4.0.0"
+  sdk: '>=3.2.5 <4.0.0'
+  flutter: ">=1.17.0"
 
 dependencies:
   flutter:

@@ -1,3 +1,3 @@
 ## 0.0.1
 
-* TODO: Describe initial release.
+* A routing management tool based on go_router, convenient for modular registration of routes
