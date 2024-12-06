@@ -1,17 +1,20 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'mixin/route_result_mixin.dart';
 
-class MaterialResultPage<T> extends MaterialPage<T> {
+class CupertinoResultPage<T> extends CupertinoPage<T> {
   final String? pageName;
 
-  const MaterialResultPage({
+  const CupertinoResultPage({
+    super.key,
     required super.child,
     this.pageName,
     super.maintainState = true,
+    super.title,
     super.fullscreenDialog = false,
     super.allowSnapshotting = true,
-    super.key,
     super.canPop,
     super.onPopInvoked,
     super.name,
@@ -21,7 +24,7 @@ class MaterialResultPage<T> extends MaterialPage<T> {
 
   @override
   Route<T> createRoute(BuildContext context) {
-    return _PageBasedMaterialPageRoute<T>(
+    return _PageBasedCupertinoPageRoute<T>(
       page: this,
       name: pageName,
       allowSnapshotting: allowSnapshotting,
@@ -29,27 +32,31 @@ class MaterialResultPage<T> extends MaterialPage<T> {
   }
 }
 
-class _PageBasedMaterialPageRoute<T> extends PageRoute<T>
-    with MaterialRouteTransitionMixin<T>, RouteResultMixin {
+class _PageBasedCupertinoPageRoute<T> extends PageRoute<T>
+    with CupertinoRouteTransitionMixin<T>, RouteResultMixin {
   final String? name;
 
-  _PageBasedMaterialPageRoute({
-    required MaterialPage<T> page,
+  _PageBasedCupertinoPageRoute({
+    required CupertinoPage<T> page,
+    super.allowSnapshotting = true,
     this.name,
-    super.allowSnapshotting,
   }) : super(settings: page) {
     assert(opaque);
   }
 
-  MaterialPage<T> get _page => settings as MaterialPage<T>;
+  CupertinoPage<T> get _page => settings as CupertinoPage<T>;
 
   @override
-  Widget buildContent(BuildContext context) {
-    return _page.child;
-  }
+  Widget buildContent(BuildContext context) => CupertinoScaffold(
+        topRadius: const Radius.circular(16),
+        body: _page.child,
+      );
 
   @override
   String? get pageName => name;
+
+  @override
+  String? get title => _page.title;
 
   @override
   bool get maintainState => _page.maintainState;

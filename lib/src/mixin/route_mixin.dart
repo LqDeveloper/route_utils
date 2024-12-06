@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:meta/meta.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../route_register_impl.dart';
 import 'route_path_mixin.dart';
@@ -9,7 +10,7 @@ import 'route_path_mixin.dart';
 @internal
 mixin RouteMixin {
   GoRouter get router {
-    return RouteRegisterImpl.instance.routeConfig;
+    return RouteRegisterImpl.instance.goRouter;
   }
 
   GlobalKey<NavigatorState> get navigatorKey =>
@@ -46,38 +47,46 @@ mixin RouteMixin {
     RouteRegisterImpl.instance.delegate.removeListener(listener);
   }
 
+  String getFullPath(String location) {
+    if (location == "/") {
+      return location;
+    } else {
+      return "/$location";
+    }
+  }
+
   void go(
     String location, {
     Map<String, dynamic>? arguments,
   }) =>
-      router.go(location, extra: arguments);
+      router.go(getFullPath(location), extra: arguments);
 
   Future<Map<String, dynamic>?> push<T extends Object?>(
     String location, {
     Map<String, dynamic>? arguments,
   }) =>
-      router.push(location, extra: arguments);
+      router.push(getFullPath(location), extra: arguments);
 
   Future<Map<String, dynamic>?> pushReplacement<T extends Object?>(
     String location, {
     Map<String, dynamic>? arguments,
   }) =>
-      router.pushReplacement(location, extra: arguments);
+      router.pushReplacement(getFullPath(location), extra: arguments);
 
   Future<Map<String, dynamic>?> replace<T>(
     String location, {
     Map<String, dynamic>? arguments,
   }) =>
-      router.replace(location, extra: arguments);
+      router.replace(getFullPath(location), extra: arguments);
 
   Future<Map<String, dynamic>?> pushOrReplace<T>(
     String location, {
     Map<String, dynamic>? arguments,
   }) {
     if (currentPath == location) {
-      return router.replace(location, extra: arguments);
+      return router.replace(getFullPath(location), extra: arguments);
     } else {
-      return router.push(location, extra: arguments);
+      return router.push(getFullPath(location), extra: arguments);
     }
   }
 
@@ -87,43 +96,42 @@ mixin RouteMixin {
 
   void pop([Map<String, dynamic>? result]) => router.pop(result);
 
-  Future<T?> showAppGeneralDialog<T extends Object?>({
-    required RoutePageBuilder pageBuilder,
-    bool barrierDismissible = false,
+  Future<T?> showAppDialog<T extends Object?>({
+    required BuildContext context,
+    required WidgetBuilder builder,
+    bool barrierDismissible = true,
+    Color? barrierColor,
     String? barrierLabel,
-    Color barrierColor = const Color(0x80000000),
-    Duration transitionDuration = const Duration(milliseconds: 200),
-    RouteTransitionsBuilder? transitionBuilder,
+    bool useSafeArea = true,
     bool useRootNavigator = true,
     RouteSettings? routeSettings,
     Offset? anchorPoint,
+    TraversalEdgeBehavior? traversalEdgeBehavior,
   }) {
-    final context = navigatorKey.currentContext;
-    if (context == null || !context.mounted) {
-      return Future.value(null);
-    }
-    return showGeneralDialog(
+    return showDialog(
       context: context,
-      pageBuilder: pageBuilder,
+      builder: builder,
       barrierDismissible: barrierDismissible,
-      barrierLabel: barrierLabel,
       barrierColor: barrierColor,
-      transitionDuration: transitionDuration,
-      transitionBuilder: transitionBuilder,
+      barrierLabel: barrierLabel,
+      useSafeArea: useSafeArea,
+      useRootNavigator: useRootNavigator,
       routeSettings: routeSettings,
       anchorPoint: anchorPoint,
+      traversalEdgeBehavior: traversalEdgeBehavior,
     );
   }
 
   Future<T?> showAppModalBottomSheet<T>({
+    required BuildContext context,
     required WidgetBuilder builder,
     Color? backgroundColor,
+    String? barrierLabel,
     double? elevation,
     ShapeBorder? shape,
     Clip? clipBehavior,
-    BoxConstraints? constraints,
     Color? barrierColor,
-    bool isScrollControlled = false,
+    bool isScrollControlled = true,
     bool useRootNavigator = false,
     bool isDismissible = true,
     bool enableDrag = true,
@@ -132,19 +140,25 @@ mixin RouteMixin {
     RouteSettings? routeSettings,
     AnimationController? transitionAnimationController,
     Offset? anchorPoint,
+    AnimationStyle? sheetAnimationStyle,
   }) {
-    final context = navigatorKey.currentContext;
-    if (context == null || !context.mounted) {
-      return Future.value(null);
-    }
+    final mediaQuery = MediaQuery.of(context);
     return showModalBottomSheet(
       context: context,
-      builder: builder,
+      builder: (cxt) {
+        return CupertinoScaffold(
+          topRadius: const Radius.circular(16),
+          transitionBackgroundColor: Colors.transparent,
+          body: builder(cxt),
+        );
+      },
       backgroundColor: backgroundColor,
       elevation: elevation,
       shape: shape,
       clipBehavior: clipBehavior,
-      constraints: constraints,
+      constraints: BoxConstraints(
+        maxHeight: mediaQuery.size.height - kToolbarHeight,
+      ),
       barrierColor: barrierColor,
       isScrollControlled: isScrollControlled,
       useRootNavigator: useRootNavigator,
@@ -155,6 +169,43 @@ mixin RouteMixin {
       routeSettings: routeSettings,
       transitionAnimationController: transitionAnimationController,
       anchorPoint: anchorPoint,
+      sheetAnimationStyle: sheetAnimationStyle,
+    );
+  }
+
+  Future<T?> showCupertinoModalBottomSheet<T>({
+    required BuildContext context,
+    required WidgetBuilder builder,
+    double? closeProgressThreshold,
+    Curve? animationCurve,
+    Curve? previousRouteAnimationCurve,
+    Color? backgroundColor,
+    Color? barrierColor,
+    bool expand = false,
+    bool useRootNavigator = false,
+    bool bounce = true,
+    bool? isDismissible,
+    bool enableDrag = true,
+    Duration? duration,
+    RouteSettings? settings,
+    BoxShadow? shadow,
+  }) {
+    return CupertinoScaffold.showCupertinoModalBottomSheet<T>(
+      context: context,
+      closeProgressThreshold: closeProgressThreshold,
+      builder: builder,
+      animationCurve: animationCurve,
+      previousRouteAnimationCurve: previousRouteAnimationCurve,
+      backgroundColor: backgroundColor,
+      barrierColor: barrierColor,
+      expand: expand,
+      useRootNavigator: useRootNavigator,
+      bounce: bounce,
+      isDismissible: isDismissible,
+      enableDrag: enableDrag,
+      duration: duration,
+      settings: settings,
+      shadow: shadow,
     );
   }
 }

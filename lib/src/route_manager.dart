@@ -28,11 +28,19 @@ class RouteManager with RouteMixin {
         if (state.extra is Map<String, dynamic>) {
           arguments = state.extra as Map<String, dynamic>?;
         }
-        return config.routeRedirect(
+        final path = config.routeRedirect(
           context,
-          state.path,
+          state.fullPath,
           arguments,
         );
+        if (path != null) {
+          if (path == "/") {
+            return "/";
+          } else {
+            return "/$path";
+          }
+        }
+        return null;
       },
       onException: (context, state) {
         Map<String, dynamic>? arguments;

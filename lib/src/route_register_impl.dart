@@ -19,19 +19,19 @@ class RouteRegisterImpl extends RouteRegister {
 
   late GoRouter _goRouter;
 
-  GoRouter get routeConfig => instance._goRouter;
+  GoRouter get goRouter => _goRouter;
 
   GlobalKey<NavigatorState> get navigatorKey =>
-      routeConfig.configuration.navigatorKey;
+      goRouter.configuration.navigatorKey;
 
   final Map<String, RoutePathMixin> _pathRoutes = {};
 
   List<GoRoute> get routeStack =>
-      routeConfig.routerDelegate.currentConfiguration.routes
+      goRouter.routerDelegate.currentConfiguration.routes
           .map((e) => e as GoRoute)
           .toList();
 
-  GoRouterDelegate get delegate => routeConfig.routerDelegate;
+  GoRouterDelegate get delegate => goRouter.routerDelegate;
 
   List<String> get pathStack => routeStack.map((e) => e.path).toList();
 
@@ -44,7 +44,7 @@ class RouteRegisterImpl extends RouteRegister {
   }
 
   List<String> get allRouterPath =>
-      instance._pathRoutes.values.map((e) => e.path).toList();
+      _pathRoutes.values.map((e) => e.path).toList();
 
   @override
   void registerRoute(RoutePathMixin route) {
@@ -63,18 +63,25 @@ class RouteRegisterImpl extends RouteRegister {
     if (path == null || path.isEmpty) {
       return false;
     }
-    return instance._pathRoutes.containsKey(path);
+    return _pathRoutes.containsKey(path);
   }
 
   RoutePathMixin? getRouteFromPath(String? path) {
     if (!containPath(path)) {
       return null;
     }
-    return instance._pathRoutes[path];
+    return _pathRoutes[path];
   }
 
-  List<GoRoute> get getAllRoutes {
-    return instance._pathRoutes.values.map((e) => e.createRoute()).toList();
+  GoRoute get getAllRoutes {
+    assert(_pathRoutes.containsKey("/"), "must contain '/' path");
+    final rootRoute = _pathRoutes["/"];
+    return rootRoute!.createRoute(
+      routes: _pathRoutes.values
+          .where((e) => e.path != "/")
+          .map((e) => e.createRoute())
+          .toList(),
+    );
   }
 
   void initRoute({
@@ -88,10 +95,15 @@ class RouteRegisterImpl extends RouteRegister {
     void Function(BuildContext context, GoRouterState state)? onException,
     Listenable? refreshListenable,
   }) {
-    List<GoRoute> routes = getAllRoutes;
+    String? initPath = initialLocation;
+    if (initPath != null) {
+      if (initPath != "/") {
+        initPath = "/$initPath";
+      }
+    }
     _goRouter = GoRouter(
-      routes: routes,
-      initialLocation: initialLocation,
+      routes: [getAllRoutes],
+      initialLocation: initPath,
       initialExtra: initialExtra,
       extraCodec: extraCodec,
       observers: observers,

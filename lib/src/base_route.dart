@@ -1,15 +1,13 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:go_router/go_router.dart';
 
-import 'material_result_page_route.dart';
+import 'cupertino_result_page.dart';
 import 'mixin/route_path_mixin.dart';
 
 abstract class BaseRoute extends GoRouteData with RoutePathMixin {
   @override
   String get path;
-
-  List<GoRoute> get subRoutes => [];
 
   Map<String, dynamic> get pageInfo => {};
 
@@ -22,7 +20,7 @@ abstract class BaseRoute extends GoRouteData with RoutePathMixin {
       pageBuilder: buildPage,
       redirect: redirect,
       onExit: onExit,
-      routes: routes.isNotEmpty ? routes : subRoutes,
+      routes: routes,
     );
   }
 
@@ -30,7 +28,7 @@ abstract class BaseRoute extends GoRouteData with RoutePathMixin {
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return MaterialResultPage(
+    return CupertinoResultPage(
       pageName: pageName,
       name: state.path,
       arguments: state.extra,
