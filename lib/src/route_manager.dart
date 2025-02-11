@@ -15,7 +15,9 @@ class RouteManager with RouteMixin {
     GoRouter.optionURLReflectsImperativeAPIs = true;
     final initialLocation = await config.initialLocation;
     config.registerRoute(RouteRegisterImpl());
-
+    for (final subModule in config.subRegisters) {
+      subModule.registerRoute(RouteRegisterImpl());
+    }
     RouteRegisterImpl.instance.initRoute(
       initialLocation: initialLocation,
       initialExtra: config.initialExtra,
@@ -31,6 +33,7 @@ class RouteManager with RouteMixin {
         final path = config.routeRedirect(
           context,
           state.fullPath,
+          RouteRegisterImpl.instance.getRouteFromPath(state.path)?.pageInfo,
           arguments,
         );
         if (path != null) {
@@ -49,7 +52,8 @@ class RouteManager with RouteMixin {
         }
         config.routeException(
           context,
-          state.path,
+          state.fullPath,
+          RouteRegisterImpl.instance.getRouteFromPath(state.path)?.pageInfo,
           arguments,
         );
       },

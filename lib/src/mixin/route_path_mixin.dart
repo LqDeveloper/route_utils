@@ -5,6 +5,8 @@ mixin RoutePathMixin on GoRouteData {
 
   String get path;
 
+  Map<String, dynamic>? get pageInfo => null;
+
   GoRoute createRoute({
     List<GoRoute> routes = const [],
   });

@@ -4,12 +4,14 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
+import 'base_route_register.dart';
 import 'route_register.dart';
 
 abstract class BaseRouteConfig {
   FutureOr<String?> routeRedirect(
     BuildContext context,
     String? path,
+    Map<String, dynamic>? pageInfo,
     Map<String, dynamic>? arguments,
   ) =>
       null;
@@ -17,6 +19,7 @@ abstract class BaseRouteConfig {
   void routeException(
     BuildContext context,
     String? path,
+    Map<String, dynamic>? pageInfo,
     Map<String, dynamic>? arguments,
   ) {}
 
@@ -33,6 +36,8 @@ abstract class BaseRouteConfig {
   bool get debugLogDiagnostics => kDebugMode;
 
   GlobalKey<NavigatorState>? get navigatorKey => null;
+
+  List<BaseRouteRegister> get subRegisters => [];
 
   void registerRoute(RouteRegister register) {}
 }

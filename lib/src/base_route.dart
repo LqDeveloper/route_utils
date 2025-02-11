@@ -2,14 +2,26 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:go_router/go_router.dart';
 
-import 'cupertino_result_page.dart';
+import 'material_result_page_route.dart';
 import 'mixin/route_path_mixin.dart';
 
-abstract class BaseRoute extends GoRouteData with RoutePathMixin {
-  @override
-  String get path;
+typedef WidgetRouteBuilder = Widget Function(
+    BuildContext context, Map<String, dynamic>? arguments);
 
-  Map<String, dynamic> get pageInfo => {};
+class BaseRoute extends GoRouteData with RoutePathMixin {
+  @override
+  final String path;
+  final bool auth;
+  final WidgetRouteBuilder builder;
+
+  const BaseRoute({
+    required this.path,
+    this.auth = false,
+    required this.builder,
+  });
+
+  @override
+  Map<String, dynamic>? get pageInfo => {"auth": auth};
 
   @override
   GoRoute createRoute({
@@ -24,15 +36,16 @@ abstract class BaseRoute extends GoRouteData with RoutePathMixin {
     );
   }
 
-  Widget buildWidget(BuildContext context);
+  Widget buildWidget(BuildContext context, Map<String, dynamic>? arguments) =>
+      builder(context, arguments);
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return CupertinoResultPage(
+    return MaterialResultPage(
       pageName: pageName,
       name: state.path,
       arguments: state.extra,
-      child: buildWidget(context),
+      child: buildWidget(context, state.extra as Map<String, dynamic>?),
     );
   }
 }
