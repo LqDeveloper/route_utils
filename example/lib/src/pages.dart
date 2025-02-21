@@ -14,19 +14,19 @@ class HomePage extends StatelessWidget {
           children: [
             TextButton(
               onPressed: () {
-                RouteManager.instance.push("pageOne");
+                RouteManager.instance.push("/pageOne");
               },
               child: Text("Android 风格"),
             ),
             TextButton(
               onPressed: () {
-                RouteManager.instance.push("pageTwo");
+                RouteManager.instance.push("/pageOne/pageTwo");
               },
               child: Text("iOS 风格"),
             ),
             TextButton(
               onPressed: () {
-                RouteManager.instance.push("pageThree");
+                RouteManager.instance.push("/pageOne/pageThree");
               },
               child: Text("iOS Present风格"),
             ),
@@ -47,7 +47,8 @@ class PageOne extends StatelessWidget {
       body: Center(
         child: TextButton(
           onPressed: () {
-            Navigator.of(context).pop({"data": "Android风格"});
+            // Navigator.of(context).pop({"data": "Android风格"});
+            RouteManager.instance.go("/pageTwo");
           },
           child: Text("点击返回"),
         ),

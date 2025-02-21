@@ -11,14 +11,12 @@ abstract class BaseRouteConfig {
   FutureOr<String?> routeRedirect(
     BuildContext context,
     String? path,
-    Map<String, dynamic>? pageInfo,
     Map<String, dynamic>? arguments,
   ) => null;
 
   void routeException(
     BuildContext context,
     String? path,
-    Map<String, dynamic>? pageInfo,
     Map<String, dynamic>? arguments,
   ) {}
 

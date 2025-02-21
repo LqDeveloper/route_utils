@@ -7,5 +7,5 @@ mixin RoutePathMixin on GoRouteData {
 
   Map<String, dynamic>? get pageInfo => null;
 
-  GoRoute createRoute({List<GoRoute> routes = const []});
+  GoRoute createRoute();
 }

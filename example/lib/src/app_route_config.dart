@@ -18,37 +18,32 @@ class AppRouteConfig extends BaseRouteConfig {
         builder: (_, arg) {
           return HomePage();
         },
-      ),
-    );
-
-    register.registerRoute(
-      BaseRoute(
-        path: "pageOne",
-        isMaterial: true,
-        builder: (_, arg) {
-          return PageOne();
-        },
-      ),
-    );
-
-    register.registerRoute(
-      BaseRoute(
-        path: "pageTwo",
-        isMaterial: false,
-        builder: (_, arg) {
-          return PageTwo();
-        },
-      ),
-    );
-
-    register.registerRoute(
-      BaseRoute(
-        path: "pageThree",
-        isMaterial: false,
-        isPresent: true,
-        builder: (_, arg) {
-          return PageThree();
-        },
+        routes: [
+          BaseRoute(
+            path: "pageOne",
+            isMaterial: true,
+            builder: (_, arg) {
+              return PageOne();
+            },
+            routes: [
+              BaseRoute(
+                path: "pageTwo",
+                isMaterial: false,
+                builder: (_, arg) {
+                  return PageTwo();
+                },
+              ),
+              BaseRoute(
+                path: "pageThree",
+                isMaterial: false,
+                isPresent: true,
+                builder: (_, arg) {
+                  return PageThree();
+                },
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

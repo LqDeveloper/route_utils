@@ -30,32 +30,15 @@ class RouteManager with RouteMixin {
         if (state.extra is Map<String, dynamic>) {
           arguments = state.extra as Map<String, dynamic>?;
         }
-        final path = config.routeRedirect(
-          context,
-          state.fullPath,
-          RouteRegisterImpl.instance.getRouteFromPath(state.path)?.pageInfo,
-          arguments,
-        );
-        if (path != null) {
-          if (path == "/") {
-            return "/";
-          } else {
-            return "/$path";
-          }
-        }
-        return null;
+        final path = config.routeRedirect(context, state.fullPath, arguments);
+        return path;
       },
       onException: (context, state) {
         Map<String, dynamic>? arguments;
         if (state.extra is Map<String, dynamic>) {
           arguments = state.extra as Map<String, dynamic>?;
         }
-        config.routeException(
-          context,
-          state.fullPath,
-          RouteRegisterImpl.instance.getRouteFromPath(state.path)?.pageInfo,
-          arguments,
-        );
+        config.routeException(context, state.fullPath, arguments);
       },
       refreshListenable: config.refreshListenable,
     );

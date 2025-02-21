@@ -24,14 +24,11 @@ class RouteRegisterImpl extends RouteRegister {
   GlobalKey<NavigatorState> get navigatorKey =>
       goRouter.configuration.navigatorKey;
 
+  GoRouterDelegate get delegate => goRouter.routerDelegate;
   final Map<String, RoutePathMixin> _pathRoutes = {};
 
   List<GoRoute> get routeStack =>
-      goRouter.routerDelegate.currentConfiguration.routes
-          .map((e) => e as GoRoute)
-          .toList();
-
-  GoRouterDelegate get delegate => goRouter.routerDelegate;
+      delegate.currentConfiguration.routes.map((e) => e as GoRoute).toList();
 
   List<String> get pathStack => routeStack.map((e) => e.path).toList();
 
@@ -43,9 +40,6 @@ class RouteRegisterImpl extends RouteRegister {
             : delegate.currentConfiguration;
     return matchList.uri.toString();
   }
-
-  List<String> get allRouterPath =>
-      _pathRoutes.values.map((e) => e.path).toList();
 
   @override
   void registerRoute(RoutePathMixin route) {
@@ -67,23 +61,8 @@ class RouteRegisterImpl extends RouteRegister {
     return _pathRoutes.containsKey(path);
   }
 
-  RoutePathMixin? getRouteFromPath(String? path) {
-    if (!containPath(path)) {
-      return null;
-    }
-    return _pathRoutes[path];
-  }
-
-  GoRoute get getAllRoutes {
-    assert(_pathRoutes.containsKey("/"), "must contain '/' path");
-    final rootRoute = _pathRoutes["/"];
-    return rootRoute!.createRoute(
-      routes:
-          _pathRoutes.values
-              .where((e) => e.path != "/")
-              .map((e) => e.createRoute())
-              .toList(),
-    );
+  List<GoRoute> get getAllRoutes {
+    return _pathRoutes.values.map((e) => e.createRoute()).toList();
   }
 
   void initRoute({
@@ -97,15 +76,9 @@ class RouteRegisterImpl extends RouteRegister {
     void Function(BuildContext context, GoRouterState state)? onException,
     Listenable? refreshListenable,
   }) {
-    String? initPath = initialLocation;
-    if (initPath != null) {
-      if (initPath != "/") {
-        initPath = "/$initPath";
-      }
-    }
     _goRouter = GoRouter(
-      routes: [getAllRoutes],
-      initialLocation: initPath,
+      routes: getAllRoutes,
+      initialLocation: initialLocation,
       initialExtra: initialExtra,
       extraCodec: extraCodec,
       observers: observers,

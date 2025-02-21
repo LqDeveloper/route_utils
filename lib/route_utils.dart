@@ -3,7 +3,6 @@ library route_utils;
 export 'src/base_route.dart';
 export 'src/base_route_config.dart';
 export 'src/material_result_page_route.dart';
-export 'src/mixin/route_enum_mixin.dart';
 export 'src/mixin/route_path_mixin.dart';
 export 'src/base_route_register.dart';
 export 'src/nav_link.dart';

@@ -16,12 +16,14 @@ class BaseRoute extends GoRouteData with RoutePathMixin {
   final WidgetRouteBuilder builder;
   final bool isMaterial;
   final bool isPresent;
+  final List<BaseRoute> routes;
 
   const BaseRoute({
     required this.path,
     this.auth = false,
     this.isMaterial = true,
     this.isPresent = false,
+    this.routes = const [],
     required this.builder,
   });
 
@@ -29,13 +31,13 @@ class BaseRoute extends GoRouteData with RoutePathMixin {
   Map<String, dynamic>? get pageInfo => {"auth": auth};
 
   @override
-  GoRoute createRoute({List<GoRoute> routes = const []}) {
+  GoRoute createRoute() {
     return GoRoute(
       path: path,
       pageBuilder: buildPage,
       redirect: redirect,
       onExit: onExit,
-      routes: routes,
+      routes: routes.map((e) => e.createRoute()).toList(),
     );
   }
 
