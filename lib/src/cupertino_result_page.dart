@@ -1,16 +1,16 @@
 import 'package:flutter/cupertino.dart';
 
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-
 import 'mixin/route_result_mixin.dart';
 
 class CupertinoResultPage<T> extends CupertinoPage<T> {
   final String? pageName;
+  final bool isPresent;
 
   const CupertinoResultPage({
     super.key,
     required super.child,
     this.pageName,
+    this.isPresent = false,
     super.maintainState = true,
     super.title,
     super.fullscreenDialog = false,
@@ -24,16 +24,38 @@ class CupertinoResultPage<T> extends CupertinoPage<T> {
 
   @override
   Route<T> createRoute(BuildContext context) {
-    return _PageBasedCupertinoPageRoute<T>(
-      page: this,
-      name: pageName,
-      allowSnapshotting: allowSnapshotting,
-    );
+    if (isPresent) {
+      return _CupertinoSheetResultRoute(
+        name: pageName,
+        settings: this,
+        builder: (_) => child,
+      );
+    } else {
+      return _PageBasedCupertinoPageRoute<T>(
+        page: this,
+        name: pageName,
+        allowSnapshotting: allowSnapshotting,
+      );
+    }
   }
 }
 
+class _CupertinoSheetResultRoute<T> extends CupertinoSheetRoute<T>
+    with RouteResultMixin<T> {
+  final String? name;
+
+  @override
+  String? get pageName => name;
+
+  _CupertinoSheetResultRoute({
+    this.name,
+    super.settings,
+    required super.builder,
+  });
+}
+
 class _PageBasedCupertinoPageRoute<T> extends PageRoute<T>
-    with CupertinoRouteTransitionMixin<T>, RouteResultMixin {
+    with CupertinoRouteTransitionMixin<T>, RouteResultMixin<T> {
   final String? name;
 
   _PageBasedCupertinoPageRoute({
@@ -47,10 +69,9 @@ class _PageBasedCupertinoPageRoute<T> extends PageRoute<T>
   CupertinoPage<T> get _page => settings as CupertinoPage<T>;
 
   @override
-  Widget buildContent(BuildContext context) => CupertinoScaffold(
-        topRadius: const Radius.circular(16),
-        body: _page.child,
-      );
+  Widget buildContent(BuildContext context) {
+    return _page.child;
+  }
 
   @override
   String? get pageName => name;

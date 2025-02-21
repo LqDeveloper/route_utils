@@ -37,9 +37,10 @@ class RouteRegisterImpl extends RouteRegister {
 
   String get currentRoutePath {
     final RouteMatch lastMatch = delegate.currentConfiguration.last;
-    final RouteMatchList matchList = lastMatch is ImperativeRouteMatch
-        ? lastMatch.matches
-        : delegate.currentConfiguration;
+    final RouteMatchList matchList =
+        lastMatch is ImperativeRouteMatch
+            ? lastMatch.matches
+            : delegate.currentConfiguration;
     return matchList.uri.toString();
   }
 
@@ -77,10 +78,11 @@ class RouteRegisterImpl extends RouteRegister {
     assert(_pathRoutes.containsKey("/"), "must contain '/' path");
     final rootRoute = _pathRoutes["/"];
     return rootRoute!.createRoute(
-      routes: _pathRoutes.values
-          .where((e) => e.path != "/")
-          .map((e) => e.createRoute())
-          .toList(),
+      routes:
+          _pathRoutes.values
+              .where((e) => e.path != "/")
+              .map((e) => e.createRoute())
+              .toList(),
     );
   }
 

@@ -18,16 +18,12 @@ enum PageSlideDirection {
     Curve curve = Curves.easeInOut,
   }) {
     return SlideTransition(
-        position: Tween<Offset>(
-          begin: offset,
-          end: Offset.zero,
-        ).animate(
-          CurvedAnimation(
-            parent: animation,
-            curve: curve,
-          ),
-        ),
-        child: child);
+      position: Tween<Offset>(
+        begin: offset,
+        end: Offset.zero,
+      ).animate(CurvedAnimation(parent: animation, curve: curve)),
+      child: child,
+    );
   }
 
   CustomTransitionPage<T> transitionPage<T>({
@@ -60,13 +56,13 @@ enum PageSlideDirection {
       barrierDismissible: barrierDismissible,
       barrierColor: barrierColor,
       barrierLabel: barrierLabel,
-      transitionsBuilder: (BuildContext context, Animation<double> animation,
-          Animation<double> secondaryAnimation, Widget child) {
-        return _slide(
-          child: child,
-          animation: animation,
-          curve: curve,
-        );
+      transitionsBuilder: (
+        BuildContext context,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation,
+        Widget child,
+      ) {
+        return _slide(child: child, animation: animation, curve: curve);
       },
     );
   }

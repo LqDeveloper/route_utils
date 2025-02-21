@@ -4,9 +4,7 @@ import 'route_manager.dart';
 
 typedef ParamCallback = Map<String, dynamic> Function(BuildContext context);
 
-typedef ResultCallback = void Function(
-  Map<String, dynamic>? result,
-);
+typedef ResultCallback = void Function(Map<String, dynamic>? result);
 
 class NavLink extends StatelessWidget {
   final String path;

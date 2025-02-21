@@ -30,7 +30,7 @@ class MaterialResultPage<T> extends MaterialPage<T> {
 }
 
 class _PageBasedMaterialPageRoute<T> extends PageRoute<T>
-    with MaterialRouteTransitionMixin<T>, RouteResultMixin {
+    with MaterialRouteTransitionMixin<T>, RouteResultMixin<T> {
   final String? name;
 
   _PageBasedMaterialPageRoute({

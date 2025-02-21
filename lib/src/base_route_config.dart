@@ -13,8 +13,7 @@ abstract class BaseRouteConfig {
     String? path,
     Map<String, dynamic>? pageInfo,
     Map<String, dynamic>? arguments,
-  ) =>
-      null;
+  ) => null;
 
   void routeException(
     BuildContext context,

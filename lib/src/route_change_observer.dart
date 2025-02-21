@@ -4,12 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'mixin/route_result_mixin.dart';
 
-enum RouteChangeType {
-  push,
-  pop,
-  remove,
-  replace,
-}
+enum RouteChangeType { push, pop, remove, replace }
 
 extension RouteExtension<T> on Route<T> {
   bool get isPopup {
@@ -31,11 +26,7 @@ class NavInfo {
   final Route<dynamic>? to;
   final RouteChangeType type;
 
-  NavInfo({
-    required this.from,
-    required this.to,
-    required this.type,
-  });
+  NavInfo({required this.from, required this.to, required this.type});
 
   Object? get arguments => to?.settings.arguments;
 
